@@ -53,7 +53,7 @@ if __name__ == '__main__':
             confirmBtn.click()
         except Exception as e:
             logging.exception(e)
-    end_time = time.time()
 
+    end_time = time.time()
     use_time = end_time - start_time
     print(f"总共耗时：{use_time}")
