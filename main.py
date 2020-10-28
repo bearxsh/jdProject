@@ -2,6 +2,7 @@
 # 第二步：重用第一步的Chrome和环境，实现自动下单锁定
 from ReuseChrome import ReuseChrome
 from selenium.webdriver.support.ui import WebDriverWait
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Pool
 from selenium.webdriver.common.keys import Keys
@@ -58,40 +59,16 @@ if __name__ == '__main__':
         print(index)
         driver.switch_to.window(all_windows[index])
         #driver.refresh()
-        reserveBtn = driver.find_element_by_xpath('//*[@id="btn-reservation"]')
-        reserveBtn.click()
-        wait.until(lambda x: x.find_element_by_xpath('//*[@id="presaleEarnest"]'))
-        confirmBtn = driver.find_element_by_xpath('//*[@id="presaleEarnest"]')
-        confirmBtn.click()
-        # search = driver.find_element_by_xpath('//*[@id="key"]')
-        # search.clear()
-        # search.send_keys('排位')
-        # search.send_keys(Keys.RETURN)
+        try:
+            reserveBtn = driver.find_element_by_xpath('//*[@id="btn-reservation"]')
+            # 判断支付定金按钮是否可以点击，如果不可点击说明没货，跳过此次循环
+            disable = "btn-disable" in reserveBtn.get_attribute("class")
+            if disable:
+                continue
+            reserveBtn.click()
+            wait.until(lambda x: x.find_element_by_xpath('//*[@id="presaleEarnest"]'))
+            confirmBtn = driver.find_element_by_xpath('//*[@id="presaleEarnest"]')
+            confirmBtn.click()
+        except Exception as e:
+            logging.exception(e)
 
-    # pool.close()
-    # pool.join()
-
-# print(len(all_windows))
-# with ThreadPoolExecutor(max_workers=7) as t:
-#     t.submit(tab_job(0))
-#     t.submit(tab_job(1))
-#     t.submit(tab_job(2))
-#     t.submit(tab_job(3))
-#     t.submit(tab_job(4))
-#     t.submit(tab_job(5))
-#     t.submit(tab_job(6))
-# for index in range(0, len(all_windows)):
-
-# t.submit(tab_job, index)
-# searchInput = driver.find_element_by_xpath('//*[@id="InitCartUrl"]')
-# searchInput.click()
-# searchInput.clear()
-# searchInput.send_keys('阿迪')
-# searchInput.send_keys(Keys.RETURN)
-# sleep(2)
-
-# driver.switch_to.window(all_windows[5])
-# searchInput = driver.find_element_by_xpath('//*[@id="kw"]')
-# searchInput.clear()
-# searchInput.send_keys('delete')
-# searchInput.send_keys(Keys.RETURN)
