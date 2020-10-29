@@ -1,12 +1,15 @@
 import time
 import random
 import json
+
 import requests
+
 
 def parse_json(s):
     begin = s.find('{')
     end = s.rfind('}') + 1
     return json.loads(s[begin:end])
+
 
 def check_stock(checksession, skuids, area):
     start_time = int(time.time() * 1000)
@@ -28,6 +31,7 @@ def check_stock(checksession, skuids, area):
         'callback': callback,
         '_': int(time.time() * 1000),
     }
+    # resp = checksession.get(url=url, params=payload, headers=headers)
     resp = checksession.get(url=url, params=payload)
     end_time = int(time.time() * 1000)
     print(f"耗时{end_time - start_time}ms")
@@ -56,6 +60,7 @@ def check_stock(checksession, skuids, area):
     #     logger.info('[%s]口罩已经下柜', ','.join(unUseSkuid))
     # return inStockSkuid
 
+
 # 本程序用来检查商品是否有货
 def send_wx_alert(skuid):
     sc_key = 'SCU121589T7adba0c1839a649182338ed29cfb48275f9a56fa6fcbf'
@@ -63,12 +68,11 @@ def send_wx_alert(skuid):
     desp = '[{}](https://item.jd.com/{}.html)'.format(skuid, skuid)
     response = requests.get('https://sc.ftqq.com/{}.send?text={}&desp={}'.format(sc_key, text, desp))
 
+
 if __name__ == '__main__':
     checksession = requests.session()
     skuid = ['10020498299352', '10022498778136']
     area = '1_2901_4135_0'
-    for index in range (1, 2):
+    for index in range(1, 2):
         onsale_goods_sku = check_stock(checksession, skuid, area)
         print(onsale_goods_sku)
-        for item in onsale_goods_sku:
-            send_wx_alert(item)
