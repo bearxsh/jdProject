@@ -61,7 +61,7 @@ def check_stock(checksession, skuids, area):
     # return inStockSkuid
 
 
-# 本程序用来检查商品是否有货
+# 用来通过微信推送通知商品到货
 def send_wx_alert(skuid):
     sc_key = 'SCU121589T7adba0c1839a649182338ed29cfb48275f9a56fa6fcbf'
     text = '商品有货啦：' + skuid
@@ -71,8 +71,8 @@ def send_wx_alert(skuid):
 
 if __name__ == '__main__':
     checksession = requests.session()
-    skuid = ['10020498299352', '10022498778136']
+    skuid = ['62245550083', '55634110247']
     area = '1_2901_4135_0'
     for index in range(1, 2):
         onsale_goods_sku = check_stock(checksession, skuid, area)
-        print(onsale_goods_sku)
+        print(f"有货商品skuid：{onsale_goods_sku}")
